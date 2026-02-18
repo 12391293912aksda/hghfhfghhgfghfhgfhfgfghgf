@@ -1,1031 +1,948 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>.</title>
+    <title>SCRIPTVAULT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #151515;
-            --accent-color: white;
-            --accent-glow: rgba(255, 255, 255, 0.4);
-            --card-bg: rgba(15, 15, 15, 0.7);
-            --text-color: rgba(255, 255, 255, 0.92);
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --border: rgba(255, 255, 255, 0.15);
-            --success: #4CAF50;
-            --danger: #f44336;
-            --radius-sm: 6px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --cream: #F5F0E8;
+            --warm-white: #FDFAF5;
+            --amber: #D4861A;
+            --amber-light: #F0A832;
+            --amber-pale: #FEF3DC;
+            --ink: #1A1510;
+            --ink-muted: #5A4E42;
+            --ink-faint: #9A8E82;
+            --rust: #C4522A;
+            --sage: #5A7A5A;
+            --border: #E0D8CE;
+            --shadow: rgba(26, 21, 16, 0.12);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', monospace;
-            transition: var(--transition);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            color: var(--text-color);
+            background: var(--warm-white);
+            color: var(--ink);
+            font-family: 'Syne', sans-serif;
             min-height: 100vh;
-            padding: 15px;
-            overflow-x: hidden;
-            line-height: 1.5;
-            background: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(212, 134, 26, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(196, 82, 42, 0.04) 0%, transparent 50%);
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-            background: transparent;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .floating-search {
-            position: sticky;
-            top: 15px;
-            z-index: 100;
-            margin-bottom: 15px;
-            background: rgba(20, 20, 20, 0.8);
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border);
-            padding: 10px;
+        /* HEADER */
+        .site-header {
+            background: var(--ink);
+            color: var(--cream);
+            padding: 0 40px;
             display: flex;
-            gap: 8px;
             align-items: center;
-            background: linear-gradient(to right, rgba(30, 30, 30, 0.8), rgba(20, 20, 20, 0.9));
-            border-image: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05)) 1;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--amber);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            height: 64px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: var(--cream);
+        }
+
+        .logo span { color: var(--amber); }
+
+        .header-tagline {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--ink-faint);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .tab-pill {
+            display: flex;
+            background: rgba(255,255,255,0.07);
+            border-radius: 6px;
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .tab-pill .tab {
+            padding: 5px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: rgba(245,240,232,0.55);
+            transition: all 0.2s ease;
+        }
+
+        .tab-pill .tab.active {
+            background: var(--amber);
+            color: var(--ink);
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            background: var(--cream);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 40px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-wrap {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ink-faint);
+            font-size: 0.78rem;
         }
 
         .search-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            background: rgba(30, 30, 30, 0.6);
-            color: var(--text-color);
-            border-radius: var(--radius-md);
-            font-size: 0.9rem;
-            outline: none;
-            background: linear-gradient(to right, rgba(25, 25, 25, 0.7), rgba(20, 20, 20, 0.8));
-        }
-
-        .search-input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px var(--accent-glow);
-            background: linear-gradient(to right, rgba(35, 35, 35, 0.7), rgba(25, 25, 25, 0.8));
-        }
-
-        .filter-select {
-            padding: 8px 10px;
-            border: 1px solid var(--border);
-            background: rgba(30, 30, 30, 0.6);
-            color: var(--text-color);
-            border-radius: var(--radius-md);
+            width: 100%;
+            padding: 9px 12px 9px 34px;
+            border: 1.5px solid var(--border);
+            background: var(--warm-white);
+            color: var(--ink);
+            border-radius: 6px;
+            font-family: 'Syne', sans-serif;
             font-size: 0.85rem;
             outline: none;
-            cursor: pointer;
-            background: linear-gradient(to bottom, rgba(25, 25, 25, 0.7), rgba(20, 20, 20, 0.8));
+            transition: all 0.2s;
         }
 
-        .filter-select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px var(--accent-glow);
-            background: linear-gradient(to bottom, rgba(35, 35, 35, 0.7), rgba(25, 25, 25, 0.8));
+        .search-input::placeholder { color: var(--ink-faint); }
+
+        .search-input:focus {
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px rgba(212, 134, 26, 0.12);
         }
 
-        .tabs {
+        .filter-row {
             display: flex;
-            background: rgba(30, 30, 30, 0.6);
-            border-radius: var(--radius-md);
-            padding: 3px;
-            border: 1px solid var(--border);
-            width: fit-content;
-            margin: 0 auto 15px;
-            background: linear-gradient(to right, rgba(25, 25, 25, 0.7), rgba(20, 20, 20, 0.8));
+            gap: 8px;
+            align-items: center;
         }
 
-        .tab {
-            padding: 6px 12px;
-            text-align: center;
+        .filter-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-faint);
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .chip-group { display: flex; gap: 4px; }
+
+        .chip {
+            padding: 5px 13px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--ink-muted);
+            border-radius: 20px;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
             cursor: pointer;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
+            transition: all 0.18s;
+            outline: none;
         }
 
-        .tab.active {
-            background: var(--accent-color);
-            color: black;
-            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(to right, white, #e0e0e0);
+        .chip:hover { border-color: var(--amber); color: var(--amber); }
+        .chip.active { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+
+        .select-styled {
+            padding: 6px 10px;
+            border: 1.5px solid var(--border);
+            background: var(--warm-white);
+            color: var(--ink-muted);
+            border-radius: 6px;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
         }
 
+        .select-styled:focus { border-color: var(--amber); }
+
+        /* MAIN */
+        .main-wrap {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 28px 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .section-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--ink-faint);
+            letter-spacing: 0.04em;
+        }
+
+        /* GRID */
         .scripts-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            animation: fadeIn 0.8s ease;
+            grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+            gap: 18px;
         }
 
-        @media (max-width: 1000px) {
-            .scripts-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .scripts-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
+        /* CARD */
         .script-card {
-            background: var(--card-bg);
-            border-radius: var(--radius-md);
+            background: var(--warm-white);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
             overflow: hidden;
-            border: 1px solid var(--border);
-            opacity: 0;
-            animation: cardEnter 0.5s ease forwards;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             cursor: pointer;
-            backdrop-filter: blur(8px);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(25, 25, 25, 0.7), rgba(15, 15, 15, 0.8));
-            border-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)) 1;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+            opacity: 0;
+            animation: riseUp 0.42s ease forwards;
+            position: relative;
         }
 
-        @keyframes cardEnter {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes riseUp {
+            from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .script-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-color);
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
-            background: linear-gradient(to bottom, rgba(35, 35, 35, 0.7), rgba(25, 25, 25, 0.8));
+            transform: translateY(-4px);
+            box-shadow: 0 14px 38px var(--shadow);
+            border-color: var(--amber);
         }
 
-        .script-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: var(--accent-color);
-            color: black;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            z-index: 2;
-            background: linear-gradient(to right, white, #e0e0e0);
-            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
-        }
-
-        .script-image-container {
-            width: 100%;
-            height: 140px;
-            overflow: hidden;
+        .card-image-wrap {
             position: relative;
+            height: 148px;
+            overflow: hidden;
+            background: var(--cream);
         }
 
-        .script-image-container::before {
+        .card-image-wrap::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40%;
-            background: linear-gradient(to top, rgba(15, 15, 15, 0.9), transparent);
-            z-index: 1;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 40%, rgba(26, 21, 16, 0.55));
         }
 
-        .script-image {
+        .card-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.4s ease;
         }
 
-        .script-card:hover .script-image {
-            transform: scale(1.05);
+        .script-card:hover .card-img { transform: scale(1.06); }
+
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            background: var(--rust);
+            color: #fff;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.08em;
+            padding: 3px 9px;
+            border-radius: 4px;
+            text-transform: uppercase;
         }
 
-        .script-content {
-            padding: 10px;
+        .card-game-tag {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 2;
+            background: rgba(26, 21, 16, 0.72);
+            color: var(--amber-light);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.06em;
+            padding: 3px 9px;
+            border-radius: 4px;
+            max-width: 82%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-remove {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 3;
+            background: var(--rust);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.6rem;
+            cursor: pointer;
             display: flex;
-            flex-direction: column;
-            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
-        .script-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-color);
+        .script-card:hover .card-remove { opacity: 1; }
+
+        .card-body { padding: 13px 15px; }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.93rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 9px;
+            line-height: 1.3;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .script-info {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            margin-bottom: 5px;
+        .card-meta { display: flex; gap: 13px; flex-wrap: wrap; }
+
+        .meta-item {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.66rem;
+            color: var(--ink-faint);
         }
 
-        .script-info i {
-            color: var(--accent-color);
-            width: 12px;
+        .meta-item i { color: var(--amber); font-size: 0.62rem; }
+
+        /* STATE BOX */
+        .state-box {
+            grid-column: 1/-1;
             text-align: center;
-            font-size: 0.8rem;
+            padding: 60px 20px;
+            color: var(--ink-faint);
         }
 
-        .script-stats {
+        .state-box .icon-wrap {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--amber-pale);
             display: flex;
-            gap: 10px;
-            margin-top: auto;
-            padding-top: 8px;
-            font-size: 0.75rem;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            color: var(--text-secondary);
-        }
-
-        .stat-item i {
-            color: var(--accent-color);
-            font-size: 0.7rem;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            margin: 0 auto 14px;
         }
 
-        .modal.active {
+        .state-box i { font-size: 1.4rem; color: var(--amber); }
+        .state-box h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); margin-bottom: 6px; }
+        .state-box p { font-size: 0.82rem; max-width: 340px; margin: 0 auto; line-height: 1.6; }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 21, 16, 0.62);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+            padding: 20px;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal-box {
+            background: var(--warm-white);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 85vh;
             display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
+            flex-direction: column;
             overflow: hidden;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-            border: 1px solid var(--accent-color);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-            background: linear-gradient(to bottom, rgba(25, 25, 25, 0.95), rgba(15, 15, 15, 0.98));
+            box-shadow: 0 30px 80px rgba(26, 21, 16, 0.32);
+            border: 1.5px solid var(--border);
+            animation: modalIn 0.26s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        .modal.active .modal-content {
-            transform: translateY(0);
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.94) translateY(18px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .modal-header {
-            padding: 10px 15px;
+        .modal-head {
+            padding: 18px 20px 14px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(to right, rgba(30, 30, 30, 0.9), rgba(25, 25, 25, 0.95));
+            align-items: flex-start;
+            background: var(--cream);
+        }
+
+        .modal-game-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.63rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 4px;
         }
 
         .modal-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--accent-color);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.12rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.3;
+            max-width: 420px;
         }
 
-        .modal-close {
-            background: none;
+        .modal-close-btn {
+            background: var(--border);
             border: none;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
+            color: var(--ink-muted);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.18s;
+            margin-left: 12px;
         }
 
-        .modal-close:hover {
-            color: var(--accent-color);
-        }
+        .modal-close-btn:hover { background: var(--rust); color: #fff; }
 
-        .modal-body {
-            padding: 15px;
-            overflow-y: auto;
-            max-height: calc(70vh - 80px);
-        }
+        .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
 
-        .modal-script {
-            background: rgba(20, 20, 20, 0.8);
-            border-radius: var(--radius-sm);
-            padding: 12px;
-            font-family: 'Poppins', monospace;
+        .script-display {
+            background: var(--ink);
+            color: #e8d9c0;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.73rem;
+            line-height: 1.75;
             white-space: pre-wrap;
             word-break: break-all;
-            font-size: 0.8rem;
-            color: var(--text-color);
-            max-height: 250px;
+            max-height: 300px;
             overflow-y: auto;
-            margin-bottom: 10px;
-            border: 1px solid var(--border);
-            background: linear-gradient(to bottom, rgba(30, 30, 30, 0.8), rgba(25, 25, 25, 0.9));
+            border: 1px solid rgba(212, 134, 26, 0.18);
         }
 
-        .modal-footer {
-            padding: 10px 15px;
+        .script-display::-webkit-scrollbar { width: 5px; }
+        .script-display::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); }
+        .script-display::-webkit-scrollbar-thumb { background: rgba(212, 134, 26, 0.35); border-radius: 3px; }
+
+        .modal-foot {
+            padding: 13px 20px;
             border-top: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            background: linear-gradient(to right, rgba(30, 30, 30, 0.9), rgba(25, 25, 25, 0.95));
+            gap: 10px;
+            align-items: center;
+            background: var(--cream);
         }
 
         .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.8rem;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 5px;
+            gap: 7px;
+            padding: 9px 18px;
+            border: none;
+            border-radius: 7px;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.77rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: all 0.18s;
+            outline: none;
         }
 
-        .btn-primary {
-            background: var(--accent-color);
-            color: black;
-            background: linear-gradient(to right, white, #e0e0e0);
-        }
+        .btn-amber { background: var(--amber); color: var(--ink); }
+        .btn-amber:hover { background: var(--amber-light); box-shadow: 0 4px 16px rgba(212, 134, 26, 0.35); }
 
-        .btn-primary:hover {
-            background: linear-gradient(to right, #e0e0e0, white);
-            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+        .btn-ghost {
+            background: transparent;
+            color: var(--ink-muted);
+            border: 1.5px solid var(--border);
         }
+        .btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
 
-        .btn-secondary {
-            background: rgba(40, 40, 40, 0.8);
-            color: var(--text-color);
-            border: 1px solid var(--border);
-            background: linear-gradient(to right, rgba(35, 35, 35, 0.8), rgba(30, 30, 30, 0.9));
-        }
+        .btn-saved { background: var(--sage); color: #fff; border: 1.5px solid transparent; }
+        .btn-saved:hover { background: #4a6a4a; }
 
-        .btn-secondary:hover {
-            background: linear-gradient(to right, rgba(45, 45, 45, 0.8), rgba(40, 40, 40, 0.9));
-            border-color: var(--accent-color);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-            background: linear-gradient(to right, #4CAF50, #2E7D32);
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(to right, #2E7D32, #4CAF50);
-        }
-
-        .notification {
+        /* TOAST */
+        .toast {
             position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background: var(--accent-color);
-            color: black;
-            padding: 8px 15px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 0.8rem;
-            display: none;
-            z-index: 1000;
-            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2s forwards;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
-            background: linear-gradient(to right, white, #e0e0e0);
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-
-        @keyframes fadeOut {
-            to { opacity: 0; }
-        }
-
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 30px 15px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state i {
-            font-size: 1.8rem;
-            color: var(--accent-color);
-            margin-bottom: 10px;
-            opacity: 0.7;
-        }
-
-        .empty-state h3 {
-            font-size: 1rem;
-            margin-bottom: 6px;
-            color: var(--text-color);
-        }
-
-        .empty-state p {
-            font-size: 0.8rem;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .remove-script-btn {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(60px);
+            background: var(--ink);
+            color: var(--cream);
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.76rem;
+            letter-spacing: 0.04em;
+            z-index: 999;
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            gap: 10px;
+            box-shadow: 0 8px 30px rgba(26, 21, 16, 0.32);
             opacity: 0;
-            z-index: 2;
-            font-size: 0.6rem;
-            background: linear-gradient(to bottom, #f44336, #c62828);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-left: 3px solid var(--amber);
         }
 
-        .remove-script-btn:hover {
-            background: linear-gradient(to bottom, #c62828, #f44336);
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast i { color: var(--amber); }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 7px; }
+        ::-webkit-scrollbar-track { background: var(--cream); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+        .ruled-line {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border), transparent);
+            margin: 0 40px 0;
         }
 
-        .script-card:hover .remove-script-btn {
-            opacity: 1;
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .fa-spin { animation: spin 1s linear infinite; }
+
+        @media (max-width: 768px) {
+            .site-header { padding: 0 20px; }
+            .toolbar { padding: 10px 20px; }
+            .main-wrap { padding: 20px; }
+            .header-tagline { display: none; }
+            .scripts-grid { grid-template-columns: 1fr 1fr; }
+            .ruled-line { margin: 0 20px 0; }
         }
 
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
+        @media (max-width: 480px) {
+            .scripts-grid { grid-template-columns: 1fr; }
+            .filter-row { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
-    <div class="modal" id="scriptModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Script Details</h3>
-                <button class="modal-close" id="modalClose">&times;</button>
+
+    <header class="site-header">
+        <div>
+            <div class="logo">SCRIPT<span>VAULT</span></div>
+            <div class="header-tagline">Roblox Script Repository</div>
+        </div>
+        <div class="tab-pill">
+            <div class="tab active" data-tab="cloud">Cloud</div>
+            <div class="tab" data-tab="saved">Collection</div>
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="search-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search scripts or games...">
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">Type</span>
+            <div class="chip-group" id="typeChips">
+                <button class="chip active" data-value="">All</button>
+                <button class="chip" data-value="free">Free</button>
+                <button class="chip" data-value="paid">Paid</button>
+            </div>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">Sort</span>
+            <select class="select-styled" id="sortBy">
+                <option value="updatedAt">Recent</option>
+                <option value="views">Popular</option>
+            </select>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">Show</span>
+            <select class="select-styled" id="maxResults">
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="ruled-line"></div>
+
+    <div class="main-wrap">
+        <div class="content-section active" id="cloudScripts">
+            <div class="section-header">
+                <h2 class="section-title">Latest Scripts</h2>
+                <span class="section-count" id="cloudCount"></span>
+            </div>
+            <div class="scripts-grid" id="scriptsContainer">
+                <div class="state-box">
+                    <div class="icon-wrap"><i class="fas fa-spinner fa-spin"></i></div>
+                    <h3>Loading Scripts</h3>
+                    <p>Fetching from the vault...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="savedScripts">
+            <div class="section-header">
+                <h2 class="section-title">My Collection</h2>
+                <span class="section-count" id="savedCount"></span>
+            </div>
+            <div class="scripts-grid" id="localScriptsGrid">
+                <div class="state-box">
+                    <div class="icon-wrap"><i class="fas fa-bookmark"></i></div>
+                    <h3>Nothing Saved Yet</h3>
+                    <p>Open any script and click "Save to Collection" to store it here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <div>
+                    <div class="modal-game-label" id="modalGameLabel">Game</div>
+                    <div class="modal-title" id="modalTitle">Script Title</div>
+                </div>
+                <button class="modal-close-btn" id="modalClose"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
-                <div class="modal-script" id="modalScriptContent">Loading script...</div>
+                <pre class="script-display" id="modalScriptContent">Loading...</pre>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="saveScriptBtn">
-                    <i class="fas fa-bookmark"></i>
-                    Save Script
+            <div class="modal-foot">
+                <button class="btn btn-amber" id="modalCopyBtn">
+                    <i class="fas fa-copy"></i> Copy Script
                 </button>
-                <button class="btn btn-primary" id="modalCopyButton">
-                    <i class="fas fa-copy"></i>
-                    Copy Script
+                <button class="btn btn-ghost" id="saveScriptBtn">
+                    <i class="fas fa-bookmark"></i> Save to Collection
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="floating-search">
-        <input type="text" class="search-input" placeholder="Search scripts..." id="searchInput">
-        <select class="filter-select" id="scriptType">
-            <option value="">All</option>
-            <option value="free">Free</option>
-            <option value="paid">Paid</option>
-        </select>
-        <select class="filter-select" id="sortBy">
-            <option value="updatedAt">Recent</option>
-            <option value="views">Popular</option>
-        </select>
-        <select class="filter-select" id="maxResults">
-            <option value="20">20</option>
-            <option value="30">30</option>
-            <option value="50">50</option>
-        </select>
-    </div>
-
-    <div class="tabs">
-        <div class="tab active" data-tab="cloud">Cloud Scripts</div>
-        <div class="tab" data-tab="saved">Saved Scripts</div>
-    </div>
-
-    <div class="content-section active" id="cloudScripts">
-        <div class="scripts-grid" id="scriptsContainer">
-            <div class="empty-state">
-                <i class="fas fa-spinner fa-spin"></i>
-                <h3>Loading scripts...</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="content-section" id="savedScripts">
-        <div class="scripts-grid" id="localScriptsGrid">
-            <div class="empty-state">
-                <i class="fas fa-book-open"></i>
-                <h3>No saved scripts</h3>
-                <p>Save scripts by clicking the bookmark icon in the script modal</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="notification" id="notification">
+    <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
-        <span>Script copied!</span>
+        <span id="toastText">Done!</span>
     </div>
+
     <script>
         let scriptsData = [];
-        let currentPage = 1;
-        let totalPages = 1;
-        let currentScriptIndex = -1;
         let currentScript = null;
+        let currentTab = 'cloud';
+        let activeType = '';
+
         const proxies = [
             'https://api.codetabs.com/v1/proxy/?quest=',
-            'https://thingproxy.freeboard.io/fetch/',
-            'https://corsproxy.io/?'
+            'https://corsproxy.io/?',
+            'https://thingproxy.freeboard.io/fetch/'
         ];
-        let currentProxy = 0;
-        let currentTab = 'cloud';
 
-        function getLocalScripts() {
-            const scripts = localStorage.getItem('savedScripts');
-            return scripts ? JSON.parse(scripts) : [];
+        const FALLBACK_IMG = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMzAwIDE1MCI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiNGNUYwRTgiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5QThFODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
+
+        function getSaved() {
+            try { return JSON.parse(localStorage.getItem('sv_scripts') || '[]'); } catch { return []; }
         }
 
-        function saveLocalScript(script) {
-            const scripts = getLocalScripts();
-            if (!scripts.some(s => s.title === script.title && s.script === script.script)) {
-                scripts.push(script);
-                localStorage.setItem('savedScripts', JSON.stringify(scripts));
-                return true;
-            }
-            return false;
+        function addSaved(script) {
+            const list = getSaved();
+            if (list.some(s => s.title === script.title && s.script === script.script)) return false;
+            list.unshift(script);
+            localStorage.setItem('sv_scripts', JSON.stringify(list));
+            return true;
         }
 
-        function removeLocalScript(index) {
-            const scripts = getLocalScripts();
-            scripts.splice(index, 1);
-            localStorage.setItem('savedScripts', JSON.stringify(scripts));
-            renderLocalScripts();
-            return scripts;
+        function removeSaved(idx) {
+            const list = getSaved();
+            list.splice(idx, 1);
+            localStorage.setItem('sv_scripts', JSON.stringify(list));
         }
 
-        function renderLocalScripts() {
-            const container = document.getElementById('localScriptsGrid');
-            const scripts = getLocalScripts();
-            
-            if (scripts.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-book-open"></i>
-                        <h3>No saved scripts</h3>
-                        <p>Save scripts by clicking the bookmark icon in the script modal</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '';
-            scripts.forEach((script, index) => {
-                html += `
-                    <div class="script-card" style="animation-delay: ${index * 0.05}s">
-                        <button class="remove-script-btn" data-index="${index}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <div class="script-image-container">
-                            <img
-                                src="${script.image || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMzAwIDE4MCI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIxODAiIGZpbGw9IiMzMzMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjYjBiMGIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4='}"
-                                class="script-image"
-                                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMzAwIDE4MCI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIxODAiIGZpbGw9IiMzMzMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjYjBiMGIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5JbWFnZSBFcnJvcjwvdGV4dD48L3N2Zz4='"
-                            >
-                        </div>
-                        <div class="script-content">
-                            <h3 class="script-title" title="${script.title}">${script.title}</h3>
-                            <p class="script-info">
-                                <i class="fas fa-gamepad"></i>
-                                ${script.game || 'No game specified'}
-                            </p>
-                            <div class="script-stats">
-                                <div class="stat-item">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>${script.date ? new Date(script.date).toLocaleDateString() : 'N/A'}</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" data-index="${index}" data-local="true" style="width: 100%; margin-top: auto;">
-                                <i class="fas fa-copy"></i>
-                                Copy Script
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-            
-            document.querySelectorAll('#localScriptsGrid .btn-primary').forEach(btn => {
-                btn.addEventListener('click', handleLocalCopy);
-            });
-            
-            document.querySelectorAll('.remove-script-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const index = btn.dataset.index;
-                    removeLocalScript(index);
-                    showMessage('Script removed from your collection');
-                });
-            });
-            
-            document.querySelectorAll('#localScriptsGrid .script-card').forEach(card => {
-                card.addEventListener('click', (e) => {
-                    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-                    
-                    const index = Array.from(card.parentElement.children).indexOf(card);
-                    const scripts = getLocalScripts();
-                    openScriptModal(index, true);
-                });
-            });
-        }
-
-        function switchTab(tab) {
-            currentTab = tab;
-            document.querySelectorAll('.tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.tab === tab);
-            });
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.toggle('active', section.id === `${tab}Scripts`);
-            });
-            
-            if (tab === 'saved') {
-                renderLocalScripts();
-            }
-        }
-
-        async function fetchWithRetry(url, retries = 3) {
+        async function apiFetch(url) {
             try {
-                const proxyUrl = proxies[currentProxy] + encodeURIComponent(url);
-                const response = await fetch(proxyUrl, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-                
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                if (retries > 0) {
-                    currentProxy = (currentProxy + 1) % proxies.length;
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    return fetchWithRetry(url, retries - 1);
-                }
-                throw error;
-            }
-        }
-
-        async function loadScripts(search = '', page = 1) {
-            const container = document.getElementById('scriptsContainer');
-            container.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Loading scripts...</h3></div>';
-            
-            try {
-                const scriptType = document.getElementById('scriptType').value;
-                const sortBy = document.getElementById('sortBy').value;
-                const maxResults = document.getElementById('maxResults').value;
-                
-                let apiUrl;
-                if (search) {
-                    apiUrl = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(search)}&page=${page}&max=${maxResults}`;
-                } else {
-                    apiUrl = `https://scriptblox.com/api/script/fetch?page=${page}&max=${maxResults}`;
-                }
-                
-                if (scriptType) apiUrl += `&mode=${scriptType}`;
-                if (sortBy) apiUrl += `&sortBy=${sortBy}`;
-                
-                let data;
+                const r = await fetch(url, { headers: { Accept: 'application/json' } });
+                if (!r.ok) throw new Error(r.status);
+                return await r.json();
+            } catch {}
+            for (let i = 0; i < proxies.length; i++) {
                 try {
-                    const response = await fetch(apiUrl);
-                    data = await response.json();
-                } catch (directError) {
-                    console.log('Direct fetch failed, using proxy...');
-                    data = await fetchWithRetry(apiUrl);
-                }
-                
-                if (data && data.result && data.result.scripts) {
-                    scriptsData = data.result.scripts;
-                    totalPages = data.result.totalPages || 1;
-                } else if (data && Array.isArray(data)) {
-                    scriptsData = data;
-                    totalPages = 1;
-                } else {
-                    scriptsData = [];
-                    totalPages = 1;
-                }
-                
-                currentPage = page;
-                
-                renderScripts();
-            } catch (error) {
-                console.error('Error fetching scripts:', error);
-                showMessage(`Error: ${error.message}`);
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Failed to load scripts</h3>
-                        <p>We couldn't connect to the server. Please check your internet connection and try again.</p>
-                    </div>
-                `;
+                    const r = await fetch(proxies[i] + encodeURIComponent(url));
+                    if (!r.ok) throw new Error(r.status);
+                    return await r.json();
+                } catch {}
             }
+            throw new Error('All fetches failed');
+        }
+
+        async function loadScripts(search = '') {
+            const container = document.getElementById('scriptsContainer');
+            container.innerHTML = `<div class="state-box"><div class="icon-wrap"><i class="fas fa-spinner fa-spin"></i></div><h3>Loading Scripts</h3><p>Fetching from the vault...</p></div>`;
+
+            const maxResults = document.getElementById('maxResults').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let url = search
+                ? `https://scriptblox.com/api/script/search?q=${encodeURIComponent(search)}&max=${maxResults}`
+                : `https://scriptblox.com/api/script/fetch?max=${maxResults}`;
+
+            if (activeType) url += `&mode=${activeType}`;
+            if (sortBy) url += `&sortBy=${sortBy}`;
+
+            try {
+                const data = await apiFetch(url);
+                scriptsData = data?.result?.scripts || (Array.isArray(data) ? data : []);
+                renderScripts();
+            } catch {
+                container.innerHTML = `<div class="state-box"><div class="icon-wrap"><i class="fas fa-exclamation-triangle"></i></div><h3>Connection Failed</h3><p>Couldn't reach the server. Check your connection and try again.</p></div>`;
+            }
+        }
+
+        function resolveImg(raw) {
+            if (!raw) return FALLBACK_IMG;
+            return raw.startsWith('http') ? raw : `https://scriptblox.com${raw}`;
+        }
+
+        function fmtDate(d) {
+            if (!d) return '–';
+            return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
         function renderScripts() {
             const container = document.getElementById('scriptsContainer');
-            
-            if (scriptsData.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-search"></i>
-                        <h3>No scripts found</h3>
-                        <p>Try adjusting your search or filters to find what you're looking for.</p>
-                    </div>
-                `;
+            const countEl = document.getElementById('cloudCount');
+
+            if (!scriptsData.length) {
+                countEl.textContent = '';
+                container.innerHTML = `<div class="state-box"><div class="icon-wrap"><i class="fas fa-search"></i></div><h3>No Results</h3><p>Try a different search term or adjust your filters.</p></div>`;
                 return;
             }
-            
-            let html = '';
-            scriptsData.forEach((script, index) => {
-                const raw = script.image;
-                const imageUrl = raw
-                    ? (raw.startsWith('http') ? raw : `https://scriptblox.com${raw}`)
-                    : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMzAwIDE4MCI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIxODAiIGZpbGw9IiMyNTI1MjUiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjYjBiMGIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
-    
-                html += `
-                    <div class="script-card" style="animation-delay: ${index * 0.05}s" data-index="${index}">
-                        ${script.paid ? '<span class="script-badge">Premium</span>' : ''}
-                        <div class="script-image-container">
-                            <img
-                                src="${imageUrl}"
-                                class="script-image"
-                                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMzAwIDE4MCI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIxODAiIGZpbGw9IiMyNTI1MjUiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjYjBiMGIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5JbWFnZSBFcnJvcjwvdGV4dD48L3N2Zz4='"
-                            >
-                        </div>
-                        <div class="script-content">
-                            <h3 class="script-title" title="${script.title}">${script.title}</h3>
-                            <p class="script-info">
-                                <i class="fas fa-gamepad"></i>
-                                ${script.game?.name || 'No game specified'}
-                            </p>
-                            <div class="script-stats">
-                                <div class="stat-item">
-                                    <i class="fas fa-eye"></i>
-                                    <span>${script.views?.toLocaleString() || 'N/A'}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <i class="fas fa-thumbs-up"></i>
-                                    <span>${script.likeCount?.toLocaleString() || 'N/A'}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>${script.updatedAt ? new Date(script.updatedAt).toLocaleDateString() : 'N/A'}</span>
-                                </div>
-                            </div>
+
+            countEl.textContent = `${scriptsData.length} scripts`;
+            container.innerHTML = scriptsData.map((s, i) => `
+                <div class="script-card" data-index="${i}" style="animation-delay:${i*0.035}s">
+                    ${s.paid ? '<span class="card-badge">Premium</span>' : ''}
+                    <div class="card-image-wrap">
+                        <img class="card-img" src="${resolveImg(s.image)}" alt="" onerror="this.src='${FALLBACK_IMG}'">
+                        <span class="card-game-tag">${s.game?.name || 'Unknown Game'}</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title" title="${s.title}">${s.title}</h3>
+                        <div class="card-meta">
+                            <span class="meta-item"><i class="fas fa-eye"></i>${s.views?.toLocaleString() || '–'}</span>
+                            <span class="meta-item"><i class="fas fa-heart"></i>${s.likeCount?.toLocaleString() || '–'}</span>
+                            <span class="meta-item"><i class="fas fa-clock"></i>${fmtDate(s.updatedAt)}</span>
                         </div>
                     </div>
-                `;
+                </div>
+            `).join('');
+
+            document.querySelectorAll('#scriptsContainer .script-card').forEach(card => {
+                card.addEventListener('click', () => openModal(scriptsData[+card.dataset.index], false));
             });
-            
-            container.innerHTML = html;
-            
-            document.querySelectorAll('.script-card').forEach(card => {
-                card.addEventListener('click', (e) => {
-                    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-                    
-                    const index = card.dataset.index;
-                    openScriptModal(index);
+        }
+
+        function renderSaved() {
+            const container = document.getElementById('localScriptsGrid');
+            const countEl = document.getElementById('savedCount');
+            const list = getSaved();
+            countEl.textContent = `${list.length} scripts`;
+
+            if (!list.length) {
+                container.innerHTML = `<div class="state-box"><div class="icon-wrap"><i class="fas fa-bookmark"></i></div><h3>Nothing Saved Yet</h3><p>Open any script and click "Save to Collection" to store it here.</p></div>`;
+                return;
+            }
+
+            container.innerHTML = list.map((s, i) => `
+                <div class="script-card" data-local-index="${i}" style="animation-delay:${i*0.035}s">
+                    <button class="card-remove" data-remove="${i}" title="Remove"><i class="fas fa-times"></i></button>
+                    <div class="card-image-wrap">
+                        <img class="card-img" src="${s.image || FALLBACK_IMG}" alt="" onerror="this.src='${FALLBACK_IMG}'">
+                        <span class="card-game-tag">${s.game || 'Unknown'}</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title" title="${s.title}">${s.title}</h3>
+                        <div class="card-meta">
+                            <span class="meta-item"><i class="fas fa-bookmark"></i>Saved ${fmtDate(s.date)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('#localScriptsGrid .script-card').forEach(card => {
+                card.addEventListener('click', e => {
+                    if (e.target.closest('.card-remove')) return;
+                    const s = getSaved()[+card.dataset.localIndex];
+                    if (s) openModal(s, true);
+                });
+            });
+
+            document.querySelectorAll('[data-remove]').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    removeSaved(+btn.dataset.remove);
+                    renderSaved();
+                    toast('Removed from collection');
                 });
             });
         }
 
-        function openScriptModal(index, isLocal = false) {
-            let script;
-            if (isLocal) {
-                const scripts = getLocalScripts();
-                script = scripts[index];
-                currentScript = {...script, isLocal: true, localIndex: index};
+        function openModal(script, isLocal) {
+            currentScript = { ...script, isLocal };
+            const gameName = script.game?.name || script.game || 'Unknown Game';
+            document.getElementById('modalGameLabel').textContent = gameName;
+            document.getElementById('modalTitle').textContent = script.title;
+            document.getElementById('modalScriptContent').textContent = script.script || 'No script content available.';
+
+            const saveBtn = document.getElementById('saveScriptBtn');
+            const saved = getSaved().some(s => s.title === script.title && s.script === script.script);
+            if (saved) {
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> In Collection';
+                saveBtn.className = 'btn btn-saved';
             } else {
-                script = scriptsData[index];
-                currentScript = {...script, isLocal: false, index: index};
+                saveBtn.innerHTML = '<i class="fas fa-bookmark"></i> Save to Collection';
+                saveBtn.className = 'btn btn-ghost';
             }
-            
-            if (!script) return;
-            
-            const modal = document.getElementById('scriptModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalContent = document.getElementById('modalScriptContent');
-            const modalCopyBtn = document.getElementById('modalCopyButton');
-            const saveScriptBtn = document.getElementById('saveScriptBtn');
-            
-            modalTitle.textContent = script.title;
-            modalContent.textContent = script.script || 'No script content available';
-            
-            const scripts = getLocalScripts();
-            const isSaved = scripts.some(s => s.title === script.title && s.script === script.script);
-            
-            if (isSaved) {
-                saveScriptBtn.innerHTML = '<i class="fas fa-check"></i> Saved';
-                saveScriptBtn.classList.add('btn-success');
-                saveScriptBtn.classList.remove('btn-secondary');
-            } else {
-                saveScriptBtn.innerHTML = '<i class="fas fa-bookmark"></i> Save Script';
-                saveScriptBtn.classList.add('btn-secondary');
-                saveScriptBtn.classList.remove('btn-success');
-            }
-            
-            modal.classList.add('active');
+
+            document.getElementById('modal').classList.add('open');
             document.body.style.overflow = 'hidden';
-            
-            modalCopyBtn.onclick = () => {
-                navigator.clipboard.writeText(script.script).then(() => {
-                    showMessage('Script copied to clipboard!');
-                }).catch(err => {
-                    showMessage('Failed to copy script');
-                    console.error('Failed to copy:', err);
-                });
-            };
         }
 
-        function closeScriptModal() {
-            const modal = document.getElementById('scriptModal');
-            modal.classList.remove('active');
+        function closeModal() {
+            document.getElementById('modal').classList.remove('open');
             document.body.style.overflow = '';
             currentScript = null;
         }
 
-        function saveCurrentScript() {
-            if (!currentScript) return;
-            
-            const scriptToSave = {
-                title: currentScript.title,
-                script: currentScript.script,
-                game: currentScript.game?.name || 'No game specified',
-                image: currentScript.image,
-                date: new Date().toISOString()
-            };
-            
-            const saved = saveLocalScript(scriptToSave);
-            const saveScriptBtn = document.getElementById('saveScriptBtn');
-            
-            if (saved) {
-                saveScriptBtn.innerHTML = '<i class="fas fa-check"></i> Saved';
-                saveScriptBtn.classList.add('btn-success');
-                saveScriptBtn.classList.remove('btn-secondary');
-                showMessage('Script saved to your collection!');
-                
-                if (currentTab === 'saved') {
-                    renderLocalScripts();
-                }
-            } else {
-                showMessage('This script is already in your collection');
-            }
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            document.getElementById('toastText').textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2600);
         }
 
-        function handleLocalCopy(event) {
-            event.stopPropagation();
-            const index = event.target.dataset.index;
-            const scripts = getLocalScripts();
-            const script = scripts[index];
-            
-            if (!script) {
-                showMessage('No script found');
-                return;
-            }
-
-            navigator.clipboard.writeText(script.script).then(() => {
-                showMessage('Script copied to clipboard!');
-                
-                const button = event.target;
-                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                button.classList.add('btn-success');
-                button.classList.remove('btn-primary');
-                
-                setTimeout(() => {
-                    button.innerHTML = '<i class="fas fa-copy"></i> Copy Script';
-                    button.classList.add('btn-primary');
-                    button.classList.remove('btn-success');
-                }, 2000);
-            }).catch(err => {
-                showMessage('Failed to copy script');
-                console.error('Failed to copy:', err);
-            });
-        }
-
-        function searchScripts() {
-            const searchTerm = document.getElementById('searchInput').value.trim();
-            loadScripts(searchTerm, 1);
-        }
-
-        function showMessage(text) {
-            const notif = document.getElementById('notification');
-            notif.querySelector('span').textContent = text;
-            notif.style.display = 'flex';
-            notif.style.animation = 'none';
-            void notif.offsetWidth;
-            notif.style.animation = 'slideInRight 0.5s ease, fadeOut 0.5s ease 2.5s forwards';
-        }
-
-        function setupFilterListeners() {
-            document.getElementById('scriptType').addEventListener('change', searchScripts);
-            document.getElementById('sortBy').addEventListener('change', searchScripts);
-            document.getElementById('maxResults').addEventListener('change', searchScripts);
-        }
-
-        function debounce(func, wait) {
-            let timeout;
-            return function() {
-                const context = this, args = arguments;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(context, args), wait);
-            };
+        function debounce(fn, ms) {
+            let t;
+            return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             loadScripts();
-            setupFilterListeners();
-            
-            const searchInput = document.getElementById('searchInput');
-            const debouncedSearch = debounce(searchScripts, 500);
-            searchInput.addEventListener('input', debouncedSearch);
-            
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchScripts();
-            });
-            
-            document.getElementById('modalClose').addEventListener('click', closeScriptModal);
-            
-            document.getElementById('scriptModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('scriptModal')) {
-                    closeScriptModal();
-                }
-            });
-            
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    switchTab(tab.dataset.tab);
+
+            const searchEl = document.getElementById('searchInput');
+            const debouncedSearch = debounce(() => loadScripts(searchEl.value.trim()), 480);
+            searchEl.addEventListener('input', debouncedSearch);
+            searchEl.addEventListener('keydown', e => { if (e.key === 'Enter') loadScripts(searchEl.value.trim()); });
+
+            document.querySelectorAll('#typeChips .chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('#typeChips .chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    activeType = chip.dataset.value;
+                    loadScripts(searchEl.value.trim());
                 });
             });
-            
-            document.getElementById('saveScriptBtn').addEventListener('click', saveCurrentScript);
+
+            document.getElementById('sortBy').addEventListener('change', () => loadScripts(searchEl.value.trim()));
+            document.getElementById('maxResults').addEventListener('change', () => loadScripts(searchEl.value.trim()));
+
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentTab = tab.dataset.tab;
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(`${currentTab}Scripts`).classList.add('active');
+                    if (currentTab === 'saved') renderSaved();
+                });
+            });
+
+            document.getElementById('modalClose').addEventListener('click', closeModal);
+            document.getElementById('modal').addEventListener('click', e => {
+                if (e.target === document.getElementById('modal')) closeModal();
+            });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+            document.getElementById('modalCopyBtn').addEventListener('click', () => {
+                if (!currentScript?.script) return;
+                navigator.clipboard.writeText(currentScript.script)
+                    .then(() => toast('Script copied to clipboard!'))
+                    .catch(() => toast('Copy failed — try manually'));
+            });
+
+            document.getElementById('saveScriptBtn').addEventListener('click', () => {
+                if (!currentScript) return;
+                const ok = addSaved({
+                    title: currentScript.title,
+                    script: currentScript.script,
+                    game: currentScript.game?.name || currentScript.game || 'Unknown',
+                    image: currentScript.image,
+                    date: new Date().toISOString()
+                });
+                if (ok) {
+                    const btn = document.getElementById('saveScriptBtn');
+                    btn.innerHTML = '<i class="fas fa-check"></i> In Collection';
+                    btn.className = 'btn btn-saved';
+                    toast('Saved to your collection!');
+                    if (currentTab === 'saved') renderSaved();
+                } else {
+                    toast('Already in your collection');
+                }
+            });
         });
     </script>
 </body>
